@@ -53,7 +53,7 @@ def do_check():
     for container in containers:
         container_name = container.name
         image = container.image
-        image_repotag = image.attrs["RepoTags"][0]
+        image_repotag = image.attrs["RepoTags"][0] if image.attrs["RepoTags"] else ":"
         tag = image_repotag.split(":")[1]
         image_digest = image.attrs["Id"]
         miss = reduce(
@@ -66,7 +66,7 @@ def do_check():
             (0, 0),
         )
         repo = image_repotag.split(":")[0]
-        if miss[1] > 1:
+        if miss[1] > 1 or not tag:
             from_image_tag = None
             from_image_id = None
             for sub_image in image.history()[1:]:
